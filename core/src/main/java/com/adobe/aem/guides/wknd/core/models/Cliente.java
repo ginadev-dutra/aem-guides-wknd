@@ -3,7 +3,6 @@ package com.adobe.aem.guides.wknd.core.models;
 public class Cliente {
 
     private String idCliente;
-
     private String nomeCliente;
 
     public Cliente(String idCliente, String nomeCliente) {
@@ -28,6 +27,10 @@ public class Cliente {
 
     public void setNomeCliente(String nomeCliente) {
         this.nomeCliente = nomeCliente;
+    }
+
+   public ClienteDTO geraDTO(){
+        return new ClienteDTO(getIdCliente(),getNomeCliente());
     }
 
     @Override
