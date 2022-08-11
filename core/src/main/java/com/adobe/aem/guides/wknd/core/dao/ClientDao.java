@@ -8,6 +8,6 @@ public interface ClientDao {
     void insertClient(String clientId, String clientName);
     void searchClient(String clientId);
     void deleteClient(String clientId);
-    void changeClient(Client client);
+    void updateClient(Client client);
 
 }

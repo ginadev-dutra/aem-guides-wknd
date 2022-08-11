@@ -51,7 +51,7 @@ public class ClientServletServiceImpl implements ClientServletService {
             String clientId = request.getParameter("clientId");
             Client client = new Client(clientId);
             clientDao.searchClient(clientId);
-            response.getWriter().write(clientId);
+
 
         }
 
@@ -73,7 +73,7 @@ public class ClientServletServiceImpl implements ClientServletService {
           String clientId = request.getParameter("clientId");
           String clientName = request.getParameter("clientName");
           Client client = new Client(clientId, clientName);
-          clientDao.changeClient(client);
+          clientDao.updateClient(client);
           response.getWriter().write(message);
 
 

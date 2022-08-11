@@ -46,7 +46,8 @@ public class ClientDaoImpl implements ClientDao {
         }
 
         Client returnedClient = new Client();
-        String sql = "SELECT clientId, clientName FROM CLIENT WHERE clientId = ?";
+        /*String sql = "SELECT clientId, clientName FROM CLIENT WHERE clientId = ?";*/
+        String sql = "SELECT * FROM CLIENT WHERE clientId = ?";
         try(PreparedStatement pstm = stm.getConnection().prepareStatement(sql)){
             pstm.setString(1,clientId);
             pstm.execute();
@@ -79,12 +80,10 @@ public class ClientDaoImpl implements ClientDao {
         }catch(Exception ex){
             throw new RuntimeException(ex);
         }
-
     }
 
-
     @Override
-    public void changeClient(Client client){
+    public void updateClient(Client client){
 
         Connection f = dataBaseService.getConnection();
         try {
@@ -95,8 +94,8 @@ public class ClientDaoImpl implements ClientDao {
 
         String sql = "UPDATE CLIENT SET clientName = ? WHERE clientId = ?";
         try (PreparedStatement ps = stm.getConnection().prepareStatement(sql)) {
-            ps.setString(1, client.getClientId());
-            ps.setString(2, client.getClientName());
+            ps.setString(1, client.getClientName());
+            ps.setString(2, client.getClientId());
             ps.execute();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
