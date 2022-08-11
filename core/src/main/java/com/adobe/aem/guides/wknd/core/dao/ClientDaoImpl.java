@@ -7,6 +7,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Component(immediate = true, service = ClientDao.class)
 public class ClientDaoImpl implements ClientDao {
@@ -36,7 +38,7 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public void searchClient(String clientId)  {
+    public Client searchClient(String clientId)  {
 
         Connection f = dataBaseService.getConnection();
         try {
@@ -46,7 +48,7 @@ public class ClientDaoImpl implements ClientDao {
         }
 
         Client returnedClient = new Client();
-        /*String sql = "SELECT clientId, clientName FROM CLIENT WHERE clientId = ?";*/
+
         String sql = "SELECT * FROM CLIENT WHERE clientId = ?";
         try(PreparedStatement pstm = stm.getConnection().prepareStatement(sql)){
             pstm.setString(1,clientId);
@@ -61,6 +63,27 @@ public class ClientDaoImpl implements ClientDao {
             throw new RuntimeException(ex);
         }
 
+        return returnedClient;
+    }
+
+    @Override
+    public Collection<Client> getClients() {
+        try(Connection connection = dataBaseService.getConnection()) {
+            String sql = "SELECT * FROM CLIENT";
+            Collection<Client> clients = new ArrayList<Client>();
+            try(PreparedStatement ps = connection.prepareStatement(sql)) {
+                try(ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        clients.add(new Client(rs.getString("clientId"),rs.getString("clientName")));
+                    }
+                    return clients;
+                }
+            }catch (Exception e){
+                throw new RuntimeException(e.getMessage()+"Error while getting clients");
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e.getMessage()+"Error while trying to connect to database");
+        }
     }
 
     @Override
