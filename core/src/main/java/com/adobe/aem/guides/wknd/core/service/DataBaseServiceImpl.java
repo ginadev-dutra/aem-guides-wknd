@@ -21,7 +21,7 @@ public class DataBaseServiceImpl implements DataBaseService {
     public Connection getConnection() {
         Connection connection = null;
         try {
-            DataSource dataSource = (DataSource) dataSourcePool.getDataSource("provafinal");
+            DataSource dataSource = (DataSource) dataSourcePool.getDataSource("finalquiz");
             connection = dataSource.getConnection();
             logger.debug("Connection obtained");
         }
