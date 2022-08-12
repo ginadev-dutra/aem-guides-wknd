@@ -125,7 +125,7 @@ public class ProductDaoImpl implements ProductDao {
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getProductDescription());
             ps.setString(3, product.getProductPrice());
-            ps.setString(2, product.getProductId());
+            ps.setString(4, product.getProductId());
             ps.execute();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
