@@ -8,9 +8,13 @@ import java.util.Collection;
 public interface ClientDao {
 
     void insertClient(String clientId, String clientName);
+
     Client searchClient(String clientId);
+
     void deleteClient(String clientId);
+
     void updateClient(Client client);
+
     Collection<Client> getClients();
 
 }

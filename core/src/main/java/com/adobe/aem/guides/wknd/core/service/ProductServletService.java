@@ -1,13 +1,13 @@
 package com.adobe.aem.guides.wknd.core.service;
 
-import com.adobe.aem.guides.wknd.core.models.Client;
+import com.adobe.aem.guides.wknd.core.models.Product;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 
 import java.io.IOException;
 import java.util.Collection;
 
-public interface ClientServletService {
+public interface ProductServletService {
 
     void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
 
@@ -17,5 +17,5 @@ public interface ClientServletService {
 
     void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
 
-    Collection<Client> getAllClients();
+    Collection<Product> getAllProducts();
 }
