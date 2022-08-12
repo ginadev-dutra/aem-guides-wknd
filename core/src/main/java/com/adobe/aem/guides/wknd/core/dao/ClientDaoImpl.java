@@ -19,12 +19,11 @@ public class ClientDaoImpl implements ClientDao {
 
     @Override
     public void insertClient(String clientId, String clientName) {
-
         Connection f = dataBaseService.getConnection();
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         String sql = "INSERT INTO CLIENT (clientId, clientName) VALUES (?, ?)";
@@ -33,7 +32,7 @@ public class ClientDaoImpl implements ClientDao {
             pstm.setString(2, clientName);
             pstm.execute();
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while inserting clients");
         }
     }
 
@@ -44,7 +43,7 @@ public class ClientDaoImpl implements ClientDao {
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         Client returnedClient = new Client();
@@ -60,7 +59,7 @@ public class ClientDaoImpl implements ClientDao {
                 returnedClient = (new Client(clientIdentity, nameOfClient));
             }
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while searching clients");
         }
 
         return returnedClient;
@@ -93,7 +92,7 @@ public class ClientDaoImpl implements ClientDao {
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         String sql = "DELETE FROM CLIENT WHERE clientId = ?";
@@ -101,7 +100,7 @@ public class ClientDaoImpl implements ClientDao {
             pstm.setString(1, clientId);
             pstm.execute();
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while deleting clients");
         }
     }
 
@@ -112,7 +111,7 @@ public class ClientDaoImpl implements ClientDao {
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         String sql = "UPDATE CLIENT SET clientName = ? WHERE clientId = ?";
@@ -121,7 +120,7 @@ public class ClientDaoImpl implements ClientDao {
             ps.setString(2, client.getClientId());
             ps.execute();
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while updating clients");
         }
     }
 }

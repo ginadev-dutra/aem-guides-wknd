@@ -90,24 +90,31 @@ public class ClientServletServiceImpl implements ClientServletService {
 
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
-
-        String message = "The client has been deleted!";
-        String clientId = request.getParameter("clientId");
-        Client client = new Client(clientId);
-        clientDao.deleteClient(clientId);
-        response.getWriter().write(message);
+        try{
+          String message = "The client has been deleted!";
+          String clientId = request.getParameter("clientId");
+          Client client = new Client(clientId);
+          clientDao.deleteClient(clientId);
+          response.getWriter().write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        try{
+            String message = "The client has been changed!";
+            String clientId = request.getParameter("clientId");
+            String clientName = request.getParameter("clientName");
+            Client client = new Client(clientId, clientName);
+            clientDao.updateClient(client);
+            response.getWriter().write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        String message = "The client has been changed!";
-        String clientId = request.getParameter("clientId");
-        String clientName = request.getParameter("clientName");
-        Client client = new Client(clientId, clientName);
-        clientDao.updateClient(client);
-        response.getWriter().write(message);
     }
 
     private ClientDTO getDTO(String clientId) {

@@ -24,7 +24,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         String sql = "INSERT INTO PRODUCT (productId, productName, productDescription, productPrice) VALUES (?, ?, ?, ?)";
@@ -35,7 +35,7 @@ public class ProductDaoImpl implements ProductDao {
             pstm.setString(4, productPrice);
             pstm.execute();
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while inserting products");
         }
     }
 
@@ -46,7 +46,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         Product returnedProduct = new Product();
@@ -65,7 +65,7 @@ public class ProductDaoImpl implements ProductDao {
                 returnedProduct = (new Product(productIdentity, nameOfProduct, descriptionOfProduct, priceOfProduct));
             }
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while searching products");
         }
 
         return returnedProduct;
@@ -98,7 +98,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         String sql = "DELETE FROM PRODUCT WHERE productId = ?";
@@ -106,7 +106,7 @@ public class ProductDaoImpl implements ProductDao {
             pstm.setString(1, productId);
             pstm.execute();
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while deleting products");
         }
     }
 
@@ -117,7 +117,7 @@ public class ProductDaoImpl implements ProductDao {
         try {
             stm = f.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
         String sql = "UPDATE PRODUCT SET productName = ?, productDescription = ?, productPrice = ?  WHERE productId = ?";
@@ -128,7 +128,7 @@ public class ProductDaoImpl implements ProductDao {
             ps.setString(4, product.getProductId());
             ps.execute();
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage() + "Error while updating products");
         }
     }
 }

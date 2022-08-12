@@ -91,27 +91,34 @@ public class ProductServletServiceImpl implements ProductServletService {
 
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        try{
+            String message = "The product has been deleted!";
+            String productId = request.getParameter("productId");
+            Product product = new Product(productId);
+            productDao.deleteProduct(productId);
+            response.getWriter().write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        String message = "The product has been deleted!";
-        String productId = request.getParameter("productId");
-        Product product = new Product(productId);
-        productDao.deleteProduct(productId);
-        response.getWriter().write(message);
 
     }
 
     @Override
     public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        try{
+            String message = "The product has been changed!";
+            String productId = request.getParameter("productId");
+            String productName = request.getParameter("productName");
+            String productDescription = request.getParameter("productDescription");
+            String productPrice = request.getParameter("productPrice");
 
-        String message = "The product has been changed!";
-        String productId = request.getParameter("productId");
-        String productName = request.getParameter("productName");
-        String productDescription = request.getParameter("productDescription");
-        String productPrice = request.getParameter("productPrice");
-
-        Product product = new Product(productId, productName, productDescription, productPrice);
-        productDao.updateProduct(product);
-        response.getWriter().write(message);
+            Product product = new Product(productId, productName, productDescription, productPrice);
+            productDao.updateProduct(product);
+            response.getWriter().write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private ProductDTO getDTO(String productId) {
