@@ -44,7 +44,7 @@ public class ProductServletServiceImpl implements ProductServletService {
         }
 
         if (productId != null && !productId.isEmpty() && productName != null && !productName.isEmpty()
-            && productDescription != null && !productDescription.isEmpty() && productPrice != null && !productPrice.isEmpty()) {
+                && productDescription != null && !productDescription.isEmpty() && productPrice != null && !productPrice.isEmpty()) {
 
             Product productConverter = new Product(productId, productName, productDescription, productPrice);
             try {
@@ -65,11 +65,12 @@ public class ProductServletServiceImpl implements ProductServletService {
             response.getWriter().write(message);
         }
     }
+
     @Override
     public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        if (request.getParameter("productId") != null) {
-            String idString = request.getParameter("productId");
+        if (request.getParameter("id") != null) {
+            String idString = request.getParameter("id");
             String productId = null;
             try {
                 response.getWriter().write(new Gson().toJson(getDTO(productId)));
@@ -78,8 +79,8 @@ public class ProductServletServiceImpl implements ProductServletService {
             }
         } else {
             if (productDao.getProducts() != null) {
-                Collection<Product> words = productDao.getProducts();
-                String allProducts= new Gson().toJson(words);
+                Collection<Product> products = productDao.getProducts();
+                String allProducts= new Gson().toJson(products);
                 try {
                     response.getWriter().write(allProducts);
                 } catch (IOException e) {
@@ -91,12 +92,18 @@ public class ProductServletServiceImpl implements ProductServletService {
 
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        String productId = request.getParameter("productId");
+        String message;
         try{
-            String message = "The product has been deleted!";
-            String productId = request.getParameter("productId");
-            Product product = new Product(productId);
-            productDao.deleteProduct(productId);
-            response.getWriter().write(message);
+            if(productId != null && !productId.isEmpty()){
+                Product product = new Product(productId);
+                productDao.deleteProduct(productId);
+                message = "The product has been deleted!";
+                response.getWriter().write(message);
+            } else{
+                message = "The product has not been deleted!";
+                response.getWriter().write(message);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -106,21 +113,26 @@ public class ProductServletServiceImpl implements ProductServletService {
 
     @Override
     public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        String productId = request.getParameter("productId");
+        String productName = request.getParameter("productName");
+        String productDescription = request.getParameter("productDescription");
+        String productPrice = request.getParameter("productPrice");
+        String message;
         try{
-            String message = "The product has been changed!";
-            String productId = request.getParameter("productId");
-            String productName = request.getParameter("productName");
-            String productDescription = request.getParameter("productDescription");
-            String productPrice = request.getParameter("productPrice");
-
-            Product product = new Product(productId, productName, productDescription, productPrice);
-            productDao.updateProduct(product);
-            response.getWriter().write(message);
+            if(productId != null && !productId.isEmpty() && productName != null && !productName.isEmpty()
+                    && productDescription != null && !productDescription.isEmpty() && productPrice != null && !productPrice.isEmpty()){
+                Product product = new Product(productId, productName, productDescription, productPrice);
+                productDao.updateProduct(product);
+                message = "The product has been changed!";
+                response.getWriter().write(message);
+            }else {
+                message = "The product has not been changed!";
+                response.getWriter().write(message);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
     private ProductDTO getDTO(String productId) {
         Product product = productDao.searchProduct(productId);
         ProductDTO dto = new ProductDTO(product.getProductId(), product.getProductName(), product.getProductDescription(), product.getProductPrice());
@@ -134,4 +146,3 @@ public class ProductServletServiceImpl implements ProductServletService {
 
 
 }
-

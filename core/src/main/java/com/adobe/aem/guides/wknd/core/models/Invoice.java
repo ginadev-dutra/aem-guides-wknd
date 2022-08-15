@@ -2,29 +2,39 @@ package com.adobe.aem.guides.wknd.core.models;
 
 public class Invoice {
 
-    private String invoiceId;
+    private String invoiceNumber;
+    private String invoiceProductId;
     private String invoiceClientId;
     private String invoicePrice;
 
-    public Invoice(String invoiceId, String invoiceClientId, String invoicePrice) {
-        this.invoiceId = invoiceId;
+    public Invoice(String invoiceNumber, String invoiceClientId, String invoiceProductId, String invoicePrice) {
+        this.invoiceNumber = invoiceNumber;
+        this.invoiceProductId = invoiceProductId;
         this.invoiceClientId = invoiceClientId;
         this.invoicePrice = invoicePrice;
     }
 
-    public Invoice(String invoiceId) {
-        this.invoiceId = invoiceId;
+    public Invoice(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public Invoice() {
     }
 
-    public String getInvoiceId() {
-        return invoiceId;
+    public String getInvoiceNumber() {
+        return invoiceNumber;
     }
 
-    public void setInvoiceId(String invoiceId) {
-        this.invoiceId = invoiceId;
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    public String getInvoiceProductId() {
+        return invoiceProductId;
+    }
+
+    public void setInvoiceProductId(String invoiceProductId) {
+        this.invoiceProductId = invoiceProductId;
     }
 
     public String getInvoiceClientId() {
@@ -45,13 +55,13 @@ public class Invoice {
 
     public InvoiceDTO generateDTO(){
 
-        return new InvoiceDTO(getInvoiceId(), getInvoiceClientId(), getInvoicePrice());
+        return new InvoiceDTO(getInvoiceNumber(), getInvoiceClientId(), getInvoiceProductId(), getInvoicePrice());
     }
 
     @Override
     public String toString() {
         return "Invoice{" +
-                "invoiceId='" + invoiceId + '\'' +
+                "invoiceId='" + invoiceNumber + '\'' +
                 ", invoiceClientId='" + invoiceClientId + '\'' +
                 ", invoicePrice='" + invoicePrice + '\'' +
                 '}';

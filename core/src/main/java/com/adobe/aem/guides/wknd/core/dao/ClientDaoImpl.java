@@ -54,15 +54,13 @@ public class ClientDaoImpl implements ClientDao {
             pstm.execute();
             ResultSet rst = pstm.getResultSet();
             while (rst.next()) {
-                String clientIdentity = rst.getString("clientId");
-                String nameOfClient = rst.getString("clientName");
-                returnedClient = (new Client(clientIdentity, nameOfClient));
-            }
+                returnedClient = new Client(rst.getString("clientId"), rst.getString("clientName"));
+          }
+            return returnedClient;
+
         } catch (SQLException ex) {
             throw new RuntimeException(ex.getMessage() + "Error while searching clients");
         }
-
-        return returnedClient;
     }
 
     @Override

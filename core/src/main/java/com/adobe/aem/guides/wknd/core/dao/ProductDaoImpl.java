@@ -42,33 +42,23 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product searchProduct(String productId) {
 
-        Connection f = dataBaseService.getConnection();
-        try {
-            stm = f.createStatement();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
-        }
-
-        Product returnedProduct = new Product();
-
-        String sql = "SELECT * FROM PRODUCT WHERE productId = ?";
-        try (PreparedStatement pstm = stm.getConnection().prepareStatement(sql)) {
-            pstm.setString(1, productId);
-            pstm.execute();
-            ResultSet rst = pstm.getResultSet();
-            while (rst.next()) {
-                String productIdentity = rst.getString("productId");
-                String nameOfProduct = rst.getString("productName");
-                String descriptionOfProduct = rst.getString("productDescription");
-                String priceOfProduct = rst.getString("productPrice");
-
-                returnedProduct = (new Product(productIdentity, nameOfProduct, descriptionOfProduct, priceOfProduct));
+       try(Connection connection = dataBaseService.getConnection()) {
+            String sql = "SELECT * FROM PRODUCT WHERE productId=?";
+            Product product = new Product();
+            try(PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1,productId);
+                try(ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        product = new Product(rs.getString("productId"),rs.getString("productName"), rs.getString("productDescription"), rs.getString("productPrice"));
+                    }
+                    return product;
+                }
+            }catch (Exception e){
+                throw new RuntimeException(e.getMessage()+"Error while getting words");
             }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex.getMessage() + "Error while searching products");
+        }catch (SQLException e){
+            throw new RuntimeException(e.getMessage()+"Error while trying to connect to database");
         }
-
-        return returnedProduct;
     }
 
     @Override

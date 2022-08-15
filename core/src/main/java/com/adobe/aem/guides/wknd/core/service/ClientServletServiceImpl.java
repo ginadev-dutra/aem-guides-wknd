@@ -67,8 +67,8 @@ public class ClientServletServiceImpl implements ClientServletService {
     @Override
     public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        if (request.getParameter("clientId") != null) {
-            String idString = request.getParameter("clientId");
+        if (request.getParameter("id") != null) {
+            String idString = request.getParameter("id");
             String clientId = null;
             try {
                 response.getWriter().write(new Gson().toJson(getDTO(clientId)));
@@ -77,8 +77,8 @@ public class ClientServletServiceImpl implements ClientServletService {
             }
         } else {
             if (clientDao.getClients() != null) {
-                Collection<Client> words = clientDao.getClients();
-                String allClients = new Gson().toJson(words);
+                Collection<Client> clients = clientDao.getClients();
+                String allClients = new Gson().toJson(clients);
                 try {
                     response.getWriter().write(allClients);
                 } catch (IOException e) {
@@ -90,12 +90,18 @@ public class ClientServletServiceImpl implements ClientServletService {
 
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        String clientId = request.getParameter("clientId");
+        String message;
         try{
-          String message = "The client has been deleted!";
-          String clientId = request.getParameter("clientId");
-          Client client = new Client(clientId);
-          clientDao.deleteClient(clientId);
-          response.getWriter().write(message);
+            if(clientId != null && !clientId.isEmpty()){
+                Client client = new Client(clientId);
+                clientDao.deleteClient(clientId);
+                message = "The client has been deleted!";
+                response.getWriter().write(message);
+            }else{
+                message = "The client has not been deleted!";
+                response.getWriter().write(message);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -104,17 +110,22 @@ public class ClientServletServiceImpl implements ClientServletService {
 
     @Override
     public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        String message;
+        String clientId = request.getParameter("clientId");
+        String clientName = request.getParameter("clientName");
         try{
-            String message = "The client has been changed!";
-            String clientId = request.getParameter("clientId");
-            String clientName = request.getParameter("clientName");
-            Client client = new Client(clientId, clientName);
-            clientDao.updateClient(client);
-            response.getWriter().write(message);
+            if(clientId != null && !clientId.isEmpty() && clientName != null && !clientName.isEmpty()){
+                Client client = new Client(clientId, clientName);
+                clientDao.updateClient(client);
+                message = "The client has been changed!";
+                response.getWriter().write(message);
+            }else{
+                message = "The client has not been changed!";
+                response.getWriter().write(message);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private ClientDTO getDTO(String clientId) {
