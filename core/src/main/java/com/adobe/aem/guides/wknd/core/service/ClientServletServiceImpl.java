@@ -138,6 +138,7 @@ public class ClientServletServiceImpl implements ClientServletService {
 
     @Override
     public Collection<Client> getAllClients() {
+
         return clientDao.getClients();
     }
 

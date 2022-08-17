@@ -4,6 +4,7 @@ package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.ProductReportDao;
 import com.adobe.aem.guides.wknd.core.models.ProductReport;
+import com.adobe.aem.guides.wknd.core.models.ProductReportDTO;
 import com.google.gson.Gson;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
@@ -17,6 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.itextpdf.text.Document;
 
@@ -88,6 +90,16 @@ public class ProductReportServletServiceImpl implements ProductReportServletServ
         } catch (DocumentException e) {
             throw new RuntimeException(e);
         }
+    }
+    private ProductReportDTO getDTO(String productId, String productName, String productDescription, String productPrice) {
+        ArrayList<ProductReport> productReport = productReportDao.getProducts();
+        ProductReportDTO dto = new ProductReportDTO(productReport.getProductId(), productReport.getProductName(), productReport.getProductDescription(), productReport.getProductPrice);
+        return dto;
+    }
+    @Override
+    public Collection<ProductReport> getAllProducts() {
+
+        return productReportDao.getProducts();
     }
 }
 

@@ -4,6 +4,7 @@ package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.ClientReportDao;
 import com.adobe.aem.guides.wknd.core.models.ClientReport;
+import com.adobe.aem.guides.wknd.core.models.ClientReportDTO;
 import com.google.gson.Gson;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
@@ -17,6 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.itextpdf.text.Document;
 
@@ -81,7 +83,17 @@ public class ClientReportServletServiceImpl implements ClientReportServletServic
             throw new RuntimeException(e);
         }
     }
-}
-*/
+    private ClientReportDTO getDTO(String clientId, String clientName) {
+        ArrayList<ClientReport> clientReport = clientReportDao.getClients();
+        ClientReportDTO dto = new ClientReportDTO(clientReport.getClientId(), clientReport.getClientName());
+        return dto;
+    }
+    @Override
+    public Collection<ClientReport> getAllClients() {
 
+        return clientReportDao.getClients();
+    }
+}
+
+*/
 

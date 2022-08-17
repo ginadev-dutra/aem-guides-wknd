@@ -4,6 +4,7 @@ package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.InvoiceReportDao;
 import com.adobe.aem.guides.wknd.core.models.InvoiceReport;
+import com.adobe.aem.guides.wknd.core.models.InvoiceReportDTO;
 import com.google.gson.Gson;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
@@ -17,6 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.itextpdf.text.Document;
 
@@ -88,6 +90,16 @@ public class InvoiceReportServletServiceImpl implements InvoiceReportServletServ
         } catch (DocumentException e) {
             throw new RuntimeException(e);
         }
+    }
+    private InvoiceReportDTO getDTO(String invoiceNumber, String invoiceClientId, String invoiceProductId, String invoicePrice) {
+        ArrayList<InvoiceReport> invoiceReport = invoiceReportDao.getInvoices();
+        InvoiceReportDTO dto = new InvoiceReportDTO(invoiceReport.getInvoiceNumber(), invoiceReport,getInvoiceClientId, invoiceReport.getInvoiceProductId(), invoiceReport.getInvoicePrice);
+        return dto;
+    }
+    @Override
+    public Collection<InvoiceReport> getAllInvoices() {
+
+        return invoiceReportDao.getInvoices();
     }
 }
 
