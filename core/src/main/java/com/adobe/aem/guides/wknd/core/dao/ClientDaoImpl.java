@@ -1,4 +1,4 @@
-
+// Code reference = André Monteiro Fernandes Lima
 package com.adobe.aem.guides.wknd.core.dao;
 
 import com.adobe.aem.guides.wknd.core.models.Client;

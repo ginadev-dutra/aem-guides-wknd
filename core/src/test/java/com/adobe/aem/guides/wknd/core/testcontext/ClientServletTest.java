@@ -1,5 +1,4 @@
-/*
-package com.adobe.aem.guides.wknd.core.testcontext;
+/*package com.adobe.aem.guides.wknd.core.testcontext;
 
 import com.adobe.aem.guides.wknd.core.service.ClientServletService;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -22,5 +21,4 @@ public class ClientServletTest extends SlingAllMethodsServlet {
 
 
 
-}
-*/
+}*/

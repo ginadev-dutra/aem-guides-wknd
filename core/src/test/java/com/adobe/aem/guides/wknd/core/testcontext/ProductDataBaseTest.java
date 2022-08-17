@@ -1,3 +1,4 @@
+/*
 package com.adobe.aem.guides.wknd.core.testcontext;
 
 import com.adobe.aem.guides.wknd.core.dao.ProductDao;
@@ -19,5 +20,9 @@ public class ProductDataBaseTest {
         // Fake returned list
         Assert.assertTrue(productFake.isEmpty());
 
+        Product product = new Product();
+        Mockito.when(product.getProductId().thenReturn(productFake));
+
     }
 }
+*/

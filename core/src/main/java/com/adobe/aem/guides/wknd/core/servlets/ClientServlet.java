@@ -1,3 +1,4 @@
+// Code reference = André Monteiro Fernandes Lima
 package com.adobe.aem.guides.wknd.core.servlets;
 
 
@@ -26,7 +27,7 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
         SLING_SERVLET_METHODS + "=" + HttpConstants.METHOD_PUT,
         SLING_SERVLET_EXTENSIONS + "=" + "json"
 })
-@ServiceDescription("Servlet Serve Client")
+@ServiceDescription("Servlet Serve Report")
 public class ClientServlet extends SlingAllMethodsServlet {
     private static final long serialVersionUID = 1L;
 

@@ -1,3 +1,4 @@
+// Code reference = André Monteiro Fernandes Lima
 package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.models.Invoice;

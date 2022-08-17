@@ -1,17 +1,17 @@
-// Code reference = André Monteiro Fernandes Lima
 package com.adobe.aem.guides.wknd.core.models;
 
-public class ClientDTO {
+public class ClientReportDTO {
 
     private String clientId;
+
     private String clientName;
 
-    public ClientDTO() {
-    }
-
-    public ClientDTO(String clientId, String clientName) {
+    public ClientReportDTO(String clientId, String clientName) {
         this.clientId = clientId;
         this.clientName = clientName;
+    }
+
+    public ClientReportDTO() {
     }
 
     public String getClientId() {

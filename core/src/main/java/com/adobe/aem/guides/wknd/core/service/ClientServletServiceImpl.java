@@ -1,3 +1,4 @@
+// Code reference = André Monteiro Fernandes Lima
 package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.ClientDao;
@@ -118,10 +119,11 @@ public class ClientServletServiceImpl implements ClientServletService {
                 Client client = new Client(clientId, clientName);
                 clientDao.updateClient(client);
                 message = "The client has been changed!";
-                response.getWriter().write(message);
+                response.getWriter().write((message));
             }else{
                 message = "The client has not been changed!";
-                response.getWriter().write(message);
+                response.getWriter().write((message));
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
