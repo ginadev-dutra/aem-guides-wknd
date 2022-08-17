@@ -33,4 +33,16 @@ public class ClientReport {
         this.clientName = clientName;
     }
 
+    public ClientReportDTO generateDTO(){
+
+        return new ClientReportDTO(getClientId(), getClientName());
+    }
+
+    @Override
+    public String toString() {
+        return "ClientReport{" +
+                "clientId='" + clientId + '\'' +
+                ", clientName='" + clientName + '\'' +
+                '}';
+    }
 }

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 import com.itextpdf.text.Document;
 
-@Component(immediate = true, service = ReportClientServletService.class)
-public class ReportClientServletServiceImpl implements ReportClientServletService {
+@Component(immediate = true, service = ClientReportServletService.class)
+public class ClientReportServletServiceImpl implements ClientReportServletService {
 
     @Reference
     private ClientReportDao clientReportDao;
@@ -82,6 +82,6 @@ public class ReportClientServletServiceImpl implements ReportClientServletServic
         }
     }
 }
-
 */
+
 

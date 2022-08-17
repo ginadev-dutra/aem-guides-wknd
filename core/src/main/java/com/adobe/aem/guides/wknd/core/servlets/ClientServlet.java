@@ -14,7 +14,6 @@ import org.osgi.service.component.annotations.Reference;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-
 import java.io.IOException;
 
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;

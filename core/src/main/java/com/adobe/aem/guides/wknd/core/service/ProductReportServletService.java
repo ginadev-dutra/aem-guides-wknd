@@ -5,12 +5,12 @@ import org.apache.sling.api.SlingHttpServletResponse;
 
 import java.io.IOException;
 
-public interface ReportClientServletService {
+public interface ProductReportServletService {
 
 
     void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
 
-    void generateClientReport(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
+    void generateProductReport(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
 
 
 
