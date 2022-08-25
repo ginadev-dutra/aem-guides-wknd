@@ -10,6 +10,8 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import com.adobe.aem.guides.wknd.core.models.Message;
+
 
 import java.io.IOException;
 import java.util.Collection;
@@ -52,21 +54,26 @@ public class ClientServletServiceImpl implements ClientServletService {
 
             } catch (Exception e) {
                 try {
-                    response.getWriter().write("This is not a json!");
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Message("This is not a json")));
+                    return;
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
-            message = "The client has been registered!";
-            response.getWriter().write(message);
+            response.setStatus(200);
+            response.getWriter().write(new Gson().toJson(new Message("The client has been registered!")));
+            return;
         } else {
-            message = "The client has not been registered!";
-            response.getWriter().write(message);
+            response.setStatus(400);
+            response.getWriter().write(new Gson().toJson(new Message("The client has not been registered!")));
+            return;
         }
     }
 
     @Override
     public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+
         response.setContentType("application/json");
         if (request.getParameter("id") != null) {
             String idString = request.getParameter("id");
@@ -97,11 +104,14 @@ public class ClientServletServiceImpl implements ClientServletService {
             if(clientId != null && !clientId.isEmpty()){
                 Client client = new Client(clientId);
                 clientDao.deleteClient(clientId);
-                message = "The client has been deleted!";
-                response.getWriter().write(message);
+                response.setStatus(200);
+                response.getWriter().write(new Gson().toJson(new Message("The client has been deleted!")));
+                return;
             }else{
-                message = "The client has not been deleted!";
-                response.getWriter().write(message);
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("The client has not been deleted!")));
+                return;
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -118,12 +128,13 @@ public class ClientServletServiceImpl implements ClientServletService {
             if(clientId != null && !clientId.isEmpty() && clientName != null && !clientName.isEmpty()){
                 Client client = new Client(clientId, clientName);
                 clientDao.updateClient(client);
-                message = "The client has been changed!";
-                response.getWriter().write((message));
+                response.setStatus(200);
+                response.getWriter().write(new Gson().toJson(new Message("The client has been changed!")));
+                return;
             }else{
-                message = "The client has not been changed!";
-                response.getWriter().write((message));
-
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("The client has not been changed!")));
+                return;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

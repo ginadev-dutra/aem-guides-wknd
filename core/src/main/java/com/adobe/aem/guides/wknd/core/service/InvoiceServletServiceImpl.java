@@ -4,6 +4,7 @@ package com.adobe.aem.guides.wknd.core.service;
 import com.adobe.aem.guides.wknd.core.dao.InvoiceDao;
 import com.adobe.aem.guides.wknd.core.models.Invoice;
 import com.adobe.aem.guides.wknd.core.models.InvoiceDTO;
+import com.adobe.aem.guides.wknd.core.models.Message;
 import com.google.gson.Gson;
 import org.apache.tika.io.IOUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -54,16 +55,20 @@ public class InvoiceServletServiceImpl implements InvoiceServletService {
 
             } catch (Exception e) {
                 try {
-                    response.getWriter().write("This is not a json!");
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Message("This is not a json")));
+                    return;
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
-            message = "The invoice has been generated!";
-            response.getWriter().write(message);
+            response.setStatus(200);
+            response.getWriter().write(new Gson().toJson(new Message("The invoice has been generated!")));
+            return;
         } else {
-            message = "The invoice has not been generated!";
-            response.getWriter().write(message);
+            response.setStatus(400);
+            response.getWriter().write(new Gson().toJson(new Message("The invoice has not been generated!")));
+            return;
         }
     }
 
@@ -100,11 +105,13 @@ public class InvoiceServletServiceImpl implements InvoiceServletService {
             if (invoiceNumber != null && !invoiceNumber.isEmpty()) {
                 Invoice invoice = new Invoice(invoiceNumber);
                 invoiceDao.deleteInvoice(invoiceNumber);
-                message = "The invoice has been deleted!";
-                response.getWriter().write(message);
+                response.setStatus(200);
+                response.getWriter().write(new Gson().toJson(new Message("The invoice has been deleted!")));
+                return;
             } else {
-                message = "The invoice has not been deleted!";
-                response.getWriter().write(message);
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("The invoice has not been deleted!")));
+                return;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -123,11 +130,13 @@ public class InvoiceServletServiceImpl implements InvoiceServletService {
                         && invoiceProductId != null && !invoiceProductId.isEmpty() && invoicePrice != null && !invoicePrice.isEmpty()){
                     Invoice invoice = new Invoice(invoiceNumber, invoiceProductId, invoiceClientId, invoicePrice);
                     invoiceDao.updateInvoice(invoice);
-                    message = "The invoice has been changed!";
-                    response.getWriter().write(message);
+                    response.setStatus(200);
+                    response.getWriter().write(new Gson().toJson(new Message("The invoice has been changed!")));
+                    return;
                 } else{
-                    message = "The invoice has not been changed!";
-                    response.getWriter().write(message);
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Message("The invoice has not been changed!")));
+                    return;
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

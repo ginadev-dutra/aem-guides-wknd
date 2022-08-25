@@ -39,6 +39,7 @@ public class ClientDaoImpl implements ClientDao {
     @Override
     public Client searchClient(String clientId) {
 
+
         Connection f = dataBaseService.getConnection();
         try {
             stm = f.createStatement();
@@ -46,7 +47,7 @@ public class ClientDaoImpl implements ClientDao {
             throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
 
-        Client returnedClient = new Client();
+        Client returnedClient = null;
 
         String sql = "SELECT * FROM CLIENT WHERE clientId = ?";
         try (PreparedStatement pstm = stm.getConnection().prepareStatement(sql)) {

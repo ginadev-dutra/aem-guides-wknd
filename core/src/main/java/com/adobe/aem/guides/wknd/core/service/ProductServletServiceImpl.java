@@ -2,6 +2,7 @@
 package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.ProductDao;
+import com.adobe.aem.guides.wknd.core.models.Message;
 import com.adobe.aem.guides.wknd.core.models.Product;
 import com.adobe.aem.guides.wknd.core.models.ProductDTO;
 import com.google.gson.Gson;
@@ -54,16 +55,20 @@ public class ProductServletServiceImpl implements ProductServletService {
 
             } catch (Exception e) {
                 try {
-                    response.getWriter().write("This is not a json!");
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Message("This is not a json")));
+                    return;
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
-            message = "The product has been registered!";
-            response.getWriter().write(message);
+            response.setStatus(200);
+            response.getWriter().write(new Gson().toJson(new Message("The product has been registered!")));
+            return;
         } else {
-            message = "The product has not been registered!";
-            response.getWriter().write(message);
+            response.setStatus(400);
+            response.getWriter().write(new Gson().toJson(new Message("The product has not been registered!")));
+            return;
         }
     }
 
@@ -99,11 +104,13 @@ public class ProductServletServiceImpl implements ProductServletService {
             if(productId != null && !productId.isEmpty()){
                 Product product = new Product(productId);
                 productDao.deleteProduct(productId);
-                message = "The product has been deleted!";
-                response.getWriter().write(message);
+                response.setStatus(200);
+                response.getWriter().write(new Gson().toJson(new Message("The product has been deleted!")));
+                return;
             } else{
-                message = "The product has not been deleted!";
-                response.getWriter().write(message);
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("The product has not been deleted!")));
+                return;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -124,11 +131,13 @@ public class ProductServletServiceImpl implements ProductServletService {
                     && productDescription != null && !productDescription.isEmpty() && productPrice != null && !productPrice.isEmpty()){
                 Product product = new Product(productId, productName, productDescription, productPrice);
                 productDao.updateProduct(product);
-                message = "The product has been changed!";
-                response.getWriter().write(message);
+                response.setStatus(200);
+                response.getWriter().write(new Gson().toJson(new Message("The product has been changed!")));
+                return;
             }else {
-                message = "The product has not been changed!";
-                response.getWriter().write(message);
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("The product has not been changed!")));
+                return;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
