@@ -41,13 +41,13 @@ public class InvoiceDaoImpl implements InvoiceDao {
     }
 
     @Override
-    public Invoice searchInvoice(String invoiceNumber) {
+    public Invoice searchInvoice(int invoiceNumber) {
 
         try (Connection connection = dataBaseService.getConnection()) {
             String sql = "SELECT * FROM INVOICE WHERE invoiceNumber=?";
             Invoice invoice = new Invoice();
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setString(1, invoiceNumber);
+                ps.setInt(1, invoiceNumber);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         invoice = new Invoice(rs.getString("invoiceNumber"), rs.getString("invoiceClientId"), rs.getString("invoiceProductId"), rs.getString("invoicePrice"));

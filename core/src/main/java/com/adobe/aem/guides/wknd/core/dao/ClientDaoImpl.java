@@ -35,10 +35,8 @@ public class ClientDaoImpl implements ClientDao {
             throw new RuntimeException(ex.getMessage() + "Error while inserting clients");
         }
     }
-
     @Override
-    public Client searchClient(String clientId) {
-
+    public Client searchClient(int clientId) {
 
         Connection f = dataBaseService.getConnection();
         try {
@@ -46,12 +44,11 @@ public class ClientDaoImpl implements ClientDao {
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
         }
-
         Client returnedClient = null;
 
         String sql = "SELECT * FROM CLIENT WHERE clientId = ?";
         try (PreparedStatement pstm = stm.getConnection().prepareStatement(sql)) {
-            pstm.setString(1, clientId);
+            pstm.setInt(1, clientId);
             pstm.execute();
             ResultSet rst = pstm.getResultSet();
             while (rst.next()) {
@@ -63,7 +60,6 @@ public class ClientDaoImpl implements ClientDao {
             throw new RuntimeException(ex.getMessage() + "Error while searching clients");
         }
     }
-
     @Override
     public Collection<Client> getClients() {
         try (Connection connection = dataBaseService.getConnection()) {

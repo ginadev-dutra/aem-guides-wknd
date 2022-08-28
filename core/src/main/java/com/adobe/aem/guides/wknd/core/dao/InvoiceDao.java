@@ -9,7 +9,7 @@ public interface InvoiceDao {
 
     void insertInvoice(String invoiceNumber, String invoiceClientId, String invoiceProductId, String invoicePrice);
 
-    Invoice searchInvoice(String invoiceNumber);
+    Invoice searchInvoice(int invoiceNumber);
 
     void deleteInvoice(String invoiceNumber);
 

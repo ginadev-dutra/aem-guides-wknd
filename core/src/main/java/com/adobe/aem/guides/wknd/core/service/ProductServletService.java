@@ -17,6 +17,9 @@ public interface ProductServletService {
     void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
 
     void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
+    String listProductById(int id);
+
+    String listProducts();
 
     Collection<Product> getAllProducts();
 }

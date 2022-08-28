@@ -10,11 +10,11 @@ public interface ProductDao {
 
     void insertProduct(String productId, String productName, String productDescription, String productPrice);
 
-    Product searchProduct(String productId);
-
     void deleteProduct(String productId);
 
     void updateProduct(Product product);
+
+    Product searchProduct(int productId);
 
     Collection<Product> getProducts();
 

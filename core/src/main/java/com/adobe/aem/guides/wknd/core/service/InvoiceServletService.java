@@ -16,6 +16,10 @@ public interface InvoiceServletService {
     void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
     void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException;
 
+    String listInvoiceById(int id);
+
+    String listInvoices();
+
     Collection<Invoice> getAllInvoices();
 }
 

@@ -2,6 +2,7 @@
 package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.ProductDao;
+import com.adobe.aem.guides.wknd.core.models.Client;
 import com.adobe.aem.guides.wknd.core.models.Message;
 import com.adobe.aem.guides.wknd.core.models.Product;
 import com.adobe.aem.guides.wknd.core.models.ProductDTO;
@@ -75,27 +76,40 @@ public class ProductServletServiceImpl implements ProductServletService {
     @Override
     public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        if (request.getParameter("id") != null) {
-            String idString = request.getParameter("id");
-            String productId = null;
-            try {
-                response.getWriter().write(new Gson().toJson(getDTO(productId)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            if (productDao.getProducts() != null) {
-                Collection<Product> products = productDao.getProducts();
-                String allProducts= new Gson().toJson(products);
-                try {
-                    response.getWriter().write(allProducts);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        if(request.getParameter("productId") != null){
+            String idString = request.getParameter("productId");
+            int id = 0;
+
+            if(!(idString.isEmpty() || idString == null)){
+                try{
+                    id = Integer.parseInt(idString);
+                } catch (NumberFormatException e){
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Message("Parameter must be an int")));
+                    return;
                 }
+            }else{
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("Parameter can't be null")));
+                return;
+            };
+            try{
+                String clients = listProductById(id);
+                response.getWriter().write(clients);
+            } catch (IOException e){
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Message(e.getMessage()))));
+            }
+        } else{
+            String clients = listProducts();
+            try{
+                response.getWriter().write(clients);
+            } catch (Exception e){
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Message(e.getMessage()))));
             }
         }
     }
-
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         String productId = request.getParameter("productId");
@@ -115,10 +129,7 @@ public class ProductServletServiceImpl implements ProductServletService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
-
     @Override
     public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         String productId = request.getParameter("productId");
@@ -143,7 +154,28 @@ public class ProductServletServiceImpl implements ProductServletService {
             throw new RuntimeException(e);
         }
     }
-    private ProductDTO getDTO(String productId) {
+
+    @Override
+    public String listProductById(int id) {
+        Product product = null;
+        try{
+            product = productDao.searchProduct(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new Gson().toJson(product);
+    }
+    @Override
+    public String listProducts() {
+        Collection<Product> product = null;
+        try{
+            product = productDao.getProducts();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new Gson().toJson(product);
+    }
+    private ProductDTO getDTO(int productId) {
         Product product = productDao.searchProduct(productId);
         ProductDTO dto = new ProductDTO(product.getProductId(), product.getProductName(), product.getProductDescription(), product.getProductPrice());
         return dto;

@@ -33,6 +33,7 @@ public class ClientServletServiceImpl implements ClientServletService {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
+
         String clientId = request.getParameter("clientId");
         String clientName = request.getParameter("clientName");
         String message;
@@ -71,27 +72,42 @@ public class ClientServletServiceImpl implements ClientServletService {
         }
     }
 
+    // Code reference = Matheus Fortes
     @Override
     public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
 
         response.setContentType("application/json");
-        if (request.getParameter("id") != null) {
-            String idString = request.getParameter("id");
-            String clientId = null;
-            try {
-                response.getWriter().write(new Gson().toJson(getDTO(clientId)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            if (clientDao.getClients() != null) {
-                Collection<Client> clients = clientDao.getClients();
-                String allClients = new Gson().toJson(clients);
-                try {
-                    response.getWriter().write(allClients);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        if(request.getParameter("clientId") != null){
+            String idString = request.getParameter("clientId");
+            int id = 0;
+
+            if(!(idString.isEmpty() || idString == null)){
+                try{
+                    id = Integer.parseInt(idString);
+                } catch (NumberFormatException e){
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Message("Parameter must be an int")));
+                    return;
                 }
+            }else{
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("Parameter can't be null")));
+                return;
+            };
+            try{
+                String clients = listClientById(id);
+                response.getWriter().write(clients);
+            } catch (IOException e){
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Message(e.getMessage()))));
+            }
+        } else{
+            String clients = listClients();
+            try{
+                response.getWriter().write(clients);
+            } catch (Exception e){
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Message(e.getMessage()))));
             }
         }
     }
@@ -141,7 +157,29 @@ public class ClientServletServiceImpl implements ClientServletService {
         }
     }
 
-    private ClientDTO getDTO(String clientId) {
+    @Override
+    public String listClientById(int id) {
+        Client client = null;
+        try{
+            client = clientDao.searchClient(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new Gson().toJson(client);
+    }
+
+    @Override
+    public String listClients() {
+        Collection<Client> client = null;
+        try{
+            client = clientDao.getClients();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new Gson().toJson(client);
+    }
+
+    private ClientDTO getDTO(int clientId) {
         Client client = clientDao.searchClient(clientId);
         ClientDTO dto = new ClientDTO(client.getClientId(), client.getClientName());
         return dto;

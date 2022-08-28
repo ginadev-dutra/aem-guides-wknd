@@ -10,11 +10,11 @@ public interface ClientDao {
 
     void insertClient(String clientId, String clientName);
 
-    Client searchClient(String clientId);
-
     void deleteClient(String clientId);
 
     void updateClient(Client client);
+
+    Client searchClient(int clientId);
 
     Collection<Client> getClients();
 

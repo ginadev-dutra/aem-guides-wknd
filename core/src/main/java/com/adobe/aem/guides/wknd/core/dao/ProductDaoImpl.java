@@ -40,13 +40,13 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product searchProduct(String productId) {
+    public Product searchProduct(int productId) {
 
        try(Connection connection = dataBaseService.getConnection()) {
             String sql = "SELECT * FROM PRODUCT WHERE productId=?";
             Product product = new Product();
             try(PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setString(1,productId);
+                ps.setInt(1,productId);
                 try(ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         product = new Product(rs.getString("productId"),rs.getString("productName"), rs.getString("productDescription"), rs.getString("productPrice"));

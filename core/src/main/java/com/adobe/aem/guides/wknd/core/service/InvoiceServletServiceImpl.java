@@ -72,31 +72,46 @@ public class InvoiceServletServiceImpl implements InvoiceServletService {
         }
     }
 
+    // Code reference = Matheus Fortes
     @Override
     public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
 
         response.setContentType("application/json");
-        if (request.getParameter("number") != null) {
-            String idString = request.getParameter("number");
-            String invoiceNumber = null;
+        if (request.getParameter("invoiceNumber") != null) {
+            String idString = request.getParameter("invoiceNumber");
+            int id = 0;
+
+            if (!(idString.isEmpty() || idString == null)) {
+                try {
+                    id = Integer.parseInt(idString);
+                } catch (NumberFormatException e) {
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Message("Parameter must be an int")));
+                    return;
+                }
+            } else {
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("Parameter can't be null")));
+                return;
+            }
+            ;
             try {
-                response.getWriter().write(new Gson().toJson(getDTO(invoiceNumber)));
+                String clients = listInvoiceById(id);
+                response.getWriter().write(clients);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Message(e.getMessage()))));
             }
         } else {
-            if (invoiceDao.getInvoices() != null) {
-                Collection<Invoice> invoices = invoiceDao.getInvoices();
-                String allInvoices = new Gson().toJson(invoices);
-                try {
-                    response.getWriter().write(allInvoices);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            String clients = listInvoices();
+            try {
+                response.getWriter().write(clients);
+            } catch (Exception e) {
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Message(e.getMessage()))));
             }
         }
     }
-
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         String invoiceNumber = request.getParameter("invoiceNumber");
@@ -117,40 +132,58 @@ public class InvoiceServletServiceImpl implements InvoiceServletService {
             throw new RuntimeException(e);
         }
     }
-
-        @Override
-        public void doPut (SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
-            String invoiceNumber = request.getParameter("invoiceNumber");
-            String invoiceProductId = request.getParameter("invoiceProductId");
-            String invoiceClientId = request.getParameter("invoiceClientId");
-            String invoicePrice = request.getParameter("invoicePrice");
-            String message;
-            try {
-                if(invoiceNumber != null && !invoiceNumber.isEmpty() && invoiceClientId != null && !invoiceClientId.isEmpty()
-                        && invoiceProductId != null && !invoiceProductId.isEmpty() && invoicePrice != null && !invoicePrice.isEmpty()){
-                    Invoice invoice = new Invoice(invoiceNumber, invoiceProductId, invoiceClientId, invoicePrice);
-                    invoiceDao.updateInvoice(invoice);
-                    response.setStatus(200);
-                    response.getWriter().write(new Gson().toJson(new Message("The invoice has been changed!")));
-                    return;
-                } else{
-                    response.setStatus(400);
-                    response.getWriter().write(new Gson().toJson(new Message("The invoice has not been changed!")));
-                    return;
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    @Override
+    public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+        String invoiceNumber = request.getParameter("invoiceNumber");
+        String invoiceProductId = request.getParameter("invoiceProductId");
+        String invoiceClientId = request.getParameter("invoiceClientId");
+        String invoicePrice = request.getParameter("invoicePrice");
+        String message;
+        try {
+            if (invoiceNumber != null && !invoiceNumber.isEmpty() && invoiceClientId != null && !invoiceClientId.isEmpty()
+                    && invoiceProductId != null && !invoiceProductId.isEmpty() && invoicePrice != null && !invoicePrice.isEmpty()) {
+                Invoice invoice = new Invoice(invoiceNumber, invoiceProductId, invoiceClientId, invoicePrice);
+                invoiceDao.updateInvoice(invoice);
+                response.setStatus(200);
+                response.getWriter().write(new Gson().toJson(new Message("The invoice has been changed!")));
+                return;
+            } else {
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Message("The invoice has not been changed!")));
+                return;
             }
-        }
-
-        private InvoiceDTO getDTO (String invoiceNumber){
-            Invoice invoice = invoiceDao.searchInvoice(invoiceNumber);
-            InvoiceDTO dto = new InvoiceDTO(invoice.getInvoiceNumber(), invoice.getInvoiceProductId(), invoice.getInvoiceClientId(), invoice.getInvoicePrice());
-            return dto;
-        }
-
-        @Override
-        public Collection<Invoice> getAllInvoices () {
-            return invoiceDao.getInvoices();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+    @Override
+    public String listInvoiceById(int id) {
+        Invoice invoice = null;
+        try {
+            invoice = invoiceDao.searchInvoice(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new Gson().toJson(invoice);
+    }
+    @Override
+    public String listInvoices() {
+        Collection<Invoice> invoice = null;
+        try {
+            invoice = invoiceDao.getInvoices();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new Gson().toJson(invoice);
+    }
+    private InvoiceDTO getDTO(int invoiceNumber) {
+        Invoice invoice = invoiceDao.searchInvoice(invoiceNumber);
+        InvoiceDTO dto = new InvoiceDTO(invoice.getInvoiceNumber(), invoice.getInvoiceProductId(), invoice.getInvoiceClientId(), invoice.getInvoicePrice());
+        return dto;
+    }
+
+    @Override
+    public Collection<Invoice> getAllInvoices() {
+        return invoiceDao.getInvoices();
+    }
+}
